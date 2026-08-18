@@ -137,5 +137,13 @@
   "terminal": {
     "widthMode": "full",
     "colorLevel": "ansi256"
+  },
+  "extensionStatusRow": {
+    "hiddenKeys": [
+      "pi-lens-lsp"
+    ],
+    "knownKeys": [
+      "pi-lens-lsp"
+    ]
   }
 }
