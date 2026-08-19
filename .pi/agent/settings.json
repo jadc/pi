@@ -17,10 +17,6 @@
     "~/.claude/skills",
     "~/.codex/skills"
   ],
-  "terminal": {
-    "clearOnShrink": true,
-    "showTerminalProgress": true
-  },
   "theme": "custom",
   "tuiMode": "fullscreen",
   "quietStartup": true
