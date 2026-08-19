@@ -13,7 +13,7 @@
           "hideWhenEmpty": true,
           "icon": "",
           "text": "",
-          "fg": "pi:thinkingHigh",
+          "fg": "pi:accent",
           "bg": "default",
           "bold": true
         }
@@ -27,7 +27,7 @@
           "hideWhenEmpty": true,
           "icon": "",
           "text": "",
-          "fg": "pi:thinkingHigh",
+          "fg": "pi:accent",
           "bg": "default",
           "bold": true,
           "gitBranchDisplayStyle": "default",
@@ -42,7 +42,7 @@
         "options": {
           "raw": false,
           "icon": "",
-          "fg": "pi:thinkingHigh",
+          "fg": "pi:accent",
           "bg": "default",
           "bold": false,
           "contextConditionalColors": true,
@@ -61,7 +61,7 @@
         "options": {
           "raw": false,
           "icon": "",
-          "fg": "pi:thinkingHigh",
+          "fg": "pi:accent",
           "bg": "default",
           "bold": false,
           "costFormatStyle": "default",
