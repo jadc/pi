@@ -5,34 +5,51 @@
   "lines": [
     [
       {
-        "id": "cwd-basename-msxjz884-zbifo1",
-        "type": "cwd-basename",
+        "id": "model-msxjt6zk-wfzgwj",
+        "type": "model",
         "enabled": true,
         "options": {
           "raw": false,
+          "icon": "",
+          "fg": "pi:accent",
+          "bg": "default",
+          "bold": true,
+          "showProvider": false
+        }
+      },
+      {
+        "id": "context-window-msxjnjch-jco7ti",
+        "type": "context-window",
+        "enabled": true,
+        "options": {
+          "raw": true,
+          "hideWhenZero": true,
+          "icon": "",
+          "fg": "pi:accent",
+          "bg": "default",
+          "bold": true,
+          "tokenFormatStyle": "default",
+          "contextConditionalColors": false,
+          "contextWarningPercent": 70,
+          "contextDangerPercent": 90,
+          "warningFg": "yellow",
+          "warningBg": "default",
+          "dangerFg": "red",
+          "dangerBg": "default"
+        }
+      },
+      {
+        "id": "thinking-level-msxjiwib-k40smg",
+        "type": "thinking-level",
+        "enabled": true,
+        "options": {
+          "raw": true,
           "hideWhenEmpty": true,
           "icon": "",
           "text": "",
           "fg": "pi:accent",
           "bg": "default",
           "bold": true
-        }
-      },
-      {
-        "id": "git-branch-msxjiwib-gv6cd4",
-        "type": "git-branch",
-        "enabled": true,
-        "options": {
-          "raw": false,
-          "hideWhenEmpty": true,
-          "icon": "",
-          "text": "",
-          "fg": "pi:accent",
-          "bg": "default",
-          "bold": true,
-          "gitBranchDisplayStyle": "default",
-          "surroundLeft": "",
-          "surroundRight": ""
         }
       },
       {
@@ -80,51 +97,34 @@
         }
       },
       {
-        "id": "model-msxjt6zk-wfzgwj",
-        "type": "model",
-        "enabled": true,
-        "options": {
-          "raw": false,
-          "icon": "",
-          "fg": "pi:borderMuted",
-          "bg": "default",
-          "bold": false,
-          "showProvider": false
-        }
-      },
-      {
-        "id": "context-window-msxjnjch-jco7ti",
-        "type": "context-window",
-        "enabled": true,
-        "options": {
-          "raw": true,
-          "hideWhenZero": true,
-          "icon": "",
-          "fg": "pi:borderMuted",
-          "bg": "default",
-          "bold": false,
-          "tokenFormatStyle": "default",
-          "contextConditionalColors": false,
-          "contextWarningPercent": 70,
-          "contextDangerPercent": 90,
-          "warningFg": "yellow",
-          "warningBg": "default",
-          "dangerFg": "red",
-          "dangerBg": "default"
-        }
-      },
-      {
-        "id": "thinking-level-msxjiwib-k40smg",
-        "type": "thinking-level",
+        "id": "cwd-basename-msxjz884-zbifo1",
+        "type": "cwd-basename",
         "enabled": true,
         "options": {
           "raw": false,
           "hideWhenEmpty": true,
           "icon": "",
           "text": "",
-          "fg": "pi:borderMuted",
+          "fg": "pi:dim",
           "bg": "default",
           "bold": false
+        }
+      },
+      {
+        "id": "git-branch-msxjiwib-gv6cd4",
+        "type": "git-branch",
+        "enabled": true,
+        "options": {
+          "raw": false,
+          "hideWhenEmpty": true,
+          "icon": "",
+          "text": "",
+          "fg": "pi:dim",
+          "bg": "default",
+          "bold": false,
+          "gitBranchDisplayStyle": "default",
+          "surroundLeft": "",
+          "surroundRight": ""
         }
       }
     ]
