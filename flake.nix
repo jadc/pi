@@ -10,6 +10,8 @@
             home.file = {
                 ".pi/agent/settings.json".source = "${self}/.pi/agent/settings.json";
                 ".pi/agent/extensions/pi-footer.json".source = "${self}/.pi/agent/extensions/pi-footer.json";
+                ".pi/agent/extensions/last-model.ts".source = "${self}/.pi/agent/extensions/last-model.ts";
+                ".pi/agent/themes/custom.json".source = "${self}/.pi/agent/themes/custom.json";
                 ".pi-lens/config.json".source = "${self}/.pi-lens/config.json";
             };
         };
