@@ -6,12 +6,7 @@
     "npm:pi-subagents-lite",
     "npm:pi-lens",
     "npm:pi-web-access",
-    {
-      "skills": [
-        "skills/productivity/grill-me/SKILL.md"
-      ],
-      "source": "npm:mattpocock-skills"
-    }
+    "npm:mattpocock-skills"
   ],
   "skills": [
     "~/.claude/skills",
