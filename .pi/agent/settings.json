@@ -14,5 +14,8 @@
   ],
   "theme": "custom",
   "tuiMode": "fullscreen",
-  "quietStartup": true
+  "quietStartup": true,
+  "retry": {
+    "maxRetries": 10
+  }
 }
