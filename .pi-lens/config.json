@@ -1,5 +1,19 @@
 {
     "widget": {
         "visible": false
+    },
+    "contextInjection": {
+        "enabled": false
+    },
+    "format": {
+        "enabled": false
+    },
+    "autofix": {
+        "enabled": false
+    },
+    "actionableWarnings": {
+        "autoFix": {
+            "enabled": false
+        }
     }
 }
