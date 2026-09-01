@@ -14,6 +14,7 @@
                 ".pi/agent/extensions/pi-footer.json".source = "${self}/.pi/agent/extensions/pi-footer.json";
                 ".pi/agent/settings.json".source = "${self}/.pi/agent/settings.json";
                 ".pi/agent/themes/custom.json".source = "${self}/.pi/agent/themes/custom.json";
+                ".pi/web-search.json".source = "${self}/.pi/web-search.json";
             };
         };
     };
