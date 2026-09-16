@@ -1,21 +1,22 @@
 {
   "enableAnalytics": false,
   "enableInstallTelemetry": false,
-  "packages": [
-    "npm:pi-footer",
-    "npm:pi-subagents-lite",
-    "npm:pi-lens",
-    "npm:pi-web-access",
-    "npm:mattpocock-skills"
-  ],
+  "retry": { "maxRetries": 10 },
+  "theme": "custom",
+  "tuiMode": "fullscreen",
+
   "skills": [
     "~/.claude/skills",
     "~/.codex/skills"
   ],
-  "theme": "custom",
-  "tuiMode": "fullscreen",
-  "quietStartup": true,
-  "retry": {
-    "maxRetries": 10
-  }
+
+  "packages": [
+    "npm:@sting8k/pi-vcc",
+    "npm:pi-footer",
+    "npm:pi-lens",
+    "npm:pi-subagents-lite",
+    "npm:pi-web-access",
+
+    "npm:mattpocock-skills"
+  ]
 }
