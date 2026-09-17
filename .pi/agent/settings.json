@@ -3,7 +3,6 @@
   "enableInstallTelemetry": false,
   "retry": { "maxRetries": 10 },
   "theme": "custom",
-  "tuiMode": "fullscreen",
 
   "skills": [
     "~/.claude/skills",
