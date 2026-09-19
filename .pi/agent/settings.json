@@ -17,6 +17,12 @@
     "npm:pi-subagents-lite",
     "npm:pi-web-access",
 
-    "npm:mattpocock-skills"
+    {
+      "skills": [
+        "skills/engineering/**",
+        "skills/productivity/**"
+      ],
+      "source": "git:https://github.com/mattpocock/skills"
+    }
   ]
 }
