@@ -12,9 +12,8 @@
   "packages": [
     "npm:@sting8k/pi-vcc",
     "npm:pi-footer",
-    "npm:pi-intercom",
+    "npm:pi-herdsman",
     "npm:pi-lens",
-    "npm:pi-subagents-lite",
     "npm:pi-web-access",
 
     {
