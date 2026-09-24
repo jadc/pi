@@ -86,6 +86,21 @@
         }
       },
       {
+        "id": "cache-hit-rate-mufv65r0-fg2wl6",
+        "type": "cache-hit-rate",
+        "enabled": true,
+        "options": {
+          "raw": false,
+          "hideWhenZero": false,
+          "icon": "",
+          "fg": "pi:accent",
+          "bg": "default",
+          "bold": false,
+          "cacheHitSource": "session",
+          "style": "default"
+        }
+      },
+      {
         "id": "flex-separator-msxjj3dn-pauvwg",
         "type": "flex-separator",
         "enabled": true,
