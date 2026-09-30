@@ -44,7 +44,7 @@
     "customMessageText": "text",
     "customMessageLabel": "accent",
     "toolPendingBg": "bgDark",
-    "toolSuccessBg": "#1c2e26",
+    "toolSuccessBg": "#211c2e",
     "toolErrorBg": "#2e2020",
     "toolTitle": "accent",
     "toolOutput": "text",
