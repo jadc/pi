@@ -2,7 +2,9 @@
   "enableAnalytics": false,
   "enableInstallTelemetry": false,
   "retry": { "maxRetries": 10 },
+
   "theme": "custom",
+  "quietStartup": true,
 
   "skills": [
     "~/.claude/skills",
