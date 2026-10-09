@@ -17,6 +17,7 @@
     "npm:pi-herdsman",
     "npm:pi-lens",
     "npm:pi-web-access",
+    "npm:@gotgenes/pi-anthropic-auth",
 
     {
       "skills": [
