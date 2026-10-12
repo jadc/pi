@@ -3,7 +3,8 @@
   "enableInstallTelemetry": false,
   "retry": { "maxRetries": 10 },
 
-  "theme": "purple",
+  "theme": "random",
+  "themes": ["random-hue/random.json"],
   "quietStartup": true,
 
   "skills": [

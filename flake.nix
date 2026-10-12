@@ -12,6 +12,7 @@
                 ".pi/agent/extensions/pi-footer.json".source = "${self}/.pi/agent/extensions/pi-footer.json";
                 ".pi/agent/extensions/extension-autoupdate.ts".source = "${self}/.pi/agent/extensions/extension-autoupdate.ts";
                 ".pi/agent/extensions/random-hue.ts".source = "${self}/.pi/agent/extensions/random-hue.ts";
+                ".pi/agent/random-hue/config.json".source = "${self}/.pi/agent/random-hue/config.json";
                 ".pi/agent/themes/purple.json".source = "${self}/.pi/agent/themes/purple.json";
                 ".pi/agent/keybindings.json".source = "${self}/.pi/agent/keybindings.json";
                 ".pi/web-search.json".source = "${self}/.pi/web-search.json";
