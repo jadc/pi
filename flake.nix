@@ -3,7 +3,15 @@
         homeManagerModules.default = { config, lib, pkgs, ... }: {
             programs.pi-coding-agent = {
                 enable = true;
-                extraPackages = [ pkgs.nodejs ];
+                extraPackages = [
+                    pkgs.nodejs
+                    pkgs.jq
+                    pkgs.ripgrep
+                    pkgs.fd
+                    pkgs.tree
+                    pkgs.yq
+                    pkgs.python3
+                ];
             };
 
             # Explicitly symlink each modified file, such that pi is able to write in others.
