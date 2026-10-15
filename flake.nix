@@ -1,38 +1,39 @@
 {
-    outputs = { self, ... }: {
-        homeManagerModules.default = { config, lib, pkgs, ... }: {
-            programs.pi-coding-agent = {
-                enable = true;
-                extraPackages = [
-                    pkgs.nodejs
-                    pkgs.jq
-                    pkgs.ripgrep
-                    pkgs.fd
-                    pkgs.tree
-                    pkgs.yq
-                    pkgs.python3
-                ];
-            };
+    outputs = { self, ... }:
+    let
+        # Config files linked individually such that pi is still able to write in others.
+        configFiles = [
+            ".pi-lens/config.json"
+            ".pi/agent/extensions/pi-footer.json"
+            ".pi/agent/extensions/extension-autoupdate.ts"
+            ".pi/agent/extensions/random-hue.ts"
+            ".pi/agent/random-hue/config.json"
+            ".pi/agent/themes/purple.json"
+            ".pi/agent/keybindings.json"
+            ".pi/web-search.json"
+        ];
 
-            # Explicitly symlink each modified file, such that pi is able to write in others.
-            home.file = {
-                ".pi-lens/config.json".source = "${self}/.pi-lens/config.json";
-                ".pi/agent/extensions/pi-footer.json".source = "${self}/.pi/agent/extensions/pi-footer.json";
-                ".pi/agent/extensions/extension-autoupdate.ts".source = "${self}/.pi/agent/extensions/extension-autoupdate.ts";
-                ".pi/agent/extensions/random-hue.ts".source = "${self}/.pi/agent/extensions/random-hue.ts";
-                ".pi/agent/random-hue/config.json".source = "${self}/.pi/agent/random-hue/config.json";
-                ".pi/agent/themes/purple.json".source = "${self}/.pi/agent/themes/purple.json";
-                ".pi/agent/keybindings.json".source = "${self}/.pi/agent/keybindings.json";
-                ".pi/web-search.json".source = "${self}/.pi/web-search.json";
-            };
+        # Settings file is merged into the user's existing one.
+        settingsFile = ".pi/agent/settings.json";
 
-            # Pi writes settings itself, so keep the merged file writable rather than
-            # linking it into the read-only Nix store.
-            home.activation.mergePiSettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        # Common CLI tools agents use, scoped to pi only.
+        extraPackages = pkgs: [
+            pkgs.fd
+            pkgs.jq
+            pkgs.nodejs
+            pkgs.python3
+            pkgs.ripgrep
+            pkgs.tree
+            pkgs.yq
+        ];
+
+        # Pi writes settings itself, so keep the merged file writable rather than
+        # linking it into the read-only Nix store.
+        mergeSettingsScript = { lib, pkgs, home }: ''
                 (
                     set -e
                     umask 077
-                    target="${config.home.homeDirectory}/.pi/agent/settings.json"
+                    target=${lib.escapeShellArg "${home}/${settingsFile}"}
                     mkdir -p "$(dirname "$target")"
                     if [ -e "$target" ]; then
                         existing="$target"
@@ -41,7 +42,7 @@
                     fi
                     tmp="$(mktemp "$target.tmp.XXXXXXXX")"
                     if ! ${pkgs.jq}/bin/jq -s '.[0] * .[1]' \
-                        "$existing" "${self}/.pi/agent/settings.json" > "$tmp"; then
+                        "$existing" "${self}/${settingsFile}" > "$tmp"; then
                         rm -f "$tmp"
                         exit 1
                     fi
@@ -52,6 +53,50 @@
                     fi
                 )
             '';
+
+        wrappedPi = { lib, pkgs }:
+            let
+                package = pkgs.pi-coding-agent;
+            in pkgs.symlinkJoin {
+                inherit (package) meta;
+                name = "${lib.getName package}-wrapped-${lib.getVersion package}";
+                paths = [ package ];
+                preferLocalBuild = true;
+                nativeBuildInputs = [ pkgs.makeWrapper ];
+                postBuild = ''
+                    wrapProgram $out/bin/pi \
+                        --suffix PATH : ${lib.makeBinPath (extraPackages pkgs)}
+                '';
+            };
+    in {
+        homeManagerModules.default = { config, lib, pkgs, ... }: {
+            home.packages = [ (wrappedPi { inherit lib pkgs; }) ];
+
+            home.file = lib.genAttrs configFiles (file: {
+                source = "${self}/${file}";
+            });
+
+            home.activation.mergePiSettings = lib.hm.dag.entryAfter [ "linkGeneration" ]
+                (mergeSettingsScript {
+                    inherit lib pkgs;
+                    home = config.home.homeDirectory;
+                });
+        };
+
+        nixosModules.default = { config, lib, pkgs, ... }:
+        let
+            home = config.users.users.root.home;
+        in {
+            environment.systemPackages = [ (wrappedPi { inherit lib pkgs; }) ];
+
+            systemd.tmpfiles.rules = map
+                (file: "L+ ${home}/${file} - - - - ${self}/${file}")
+                configFiles;
+
+            system.activationScripts.pi-settings = {
+                deps = [ "users" ];
+                text = mergeSettingsScript { inherit lib pkgs home; };
+            };
         };
     };
 }
