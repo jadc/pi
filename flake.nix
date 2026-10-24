@@ -65,6 +65,7 @@
                 nativeBuildInputs = [ pkgs.makeWrapper ];
                 postBuild = ''
                     wrapProgram $out/bin/pi \
+                        --set-default GIT_OPTIONAL_LOCKS 0 \
                         --suffix PATH : ${lib.makeBinPath (extraPackages pkgs)}
                 '';
             };
