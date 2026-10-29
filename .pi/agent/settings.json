@@ -13,12 +13,13 @@
   ],
 
   "packages": [
+    "npm:@ff-labs/pi-fff",
+    "npm:@gotgenes/pi-anthropic-auth",
     "npm:@sting8k/pi-vcc",
     "npm:pi-footer",
     "npm:pi-herdsman",
     "npm:pi-lens",
     "npm:pi-web-access",
-    "npm:@gotgenes/pi-anthropic-auth",
 
     {
       "skills": [
