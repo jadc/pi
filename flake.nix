@@ -4,12 +4,14 @@
         # Config files linked individually such that pi is still able to write in others.
         configFiles = [
             ".pi-lens/config.json"
-            ".pi/agent/extensions/pi-footer.json"
+            ".pi/agent/agents/reviewer-alt.md"
             ".pi/agent/extensions/extension-autoupdate.ts"
+            ".pi/agent/extensions/pi-footer.json"
             ".pi/agent/extensions/random-hue.ts"
-            ".pi/agent/random-hue/config.json"
-            ".pi/agent/themes/purple.json"
             ".pi/agent/keybindings.json"
+            ".pi/agent/random-hue/config.json"
+            ".pi/agent/skills/code-review/SKILL.md"
+            ".pi/agent/themes/purple.json"
             ".pi/web-search.json"
         ];
 
