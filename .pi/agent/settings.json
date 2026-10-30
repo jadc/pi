@@ -24,6 +24,7 @@
     {
       "skills": [
         "skills/engineering/**",
+        "!skills/engineering/code-review/**",
         "skills/productivity/**"
       ],
       "source": "git:https://github.com/mattpocock/skills"
