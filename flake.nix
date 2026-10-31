@@ -36,40 +36,29 @@
                     umask 077
                     target=${lib.escapeShellArg "${home}/${settingsFile}"}
                     mkdir -p "$(dirname "$target")"
-                    if [ -e "$target" ]; then
-                        existing="$target"
-                    else
-                        existing="${pkgs.writeText "empty-pi-settings.json" "{}"}"
-                    fi
+                    existing="$target"
+                    [ -e "$target" ] || existing="${pkgs.writeText "empty-pi-settings.json" "{}"}"
                     tmp="$(mktemp "$target.tmp.XXXXXXXX")"
-                    if ! ${pkgs.jq}/bin/jq -s '.[0] * .[1]' \
-                        "$existing" "${self}/${settingsFile}" > "$tmp"; then
-                        rm -f "$tmp"
-                        exit 1
-                    fi
-                    if cmp -s "$tmp" "$target" && [ ! -L "$target" ]; then
-                        rm -f "$tmp"
-                    else
+                    trap 'rm -f "$tmp"' EXIT
+                    ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$existing" "${self}/${settingsFile}" > "$tmp"
+                    if [ -L "$target" ] || ! cmp -s "$tmp" "$target"; then
                         mv -f "$tmp" "$target"
                     fi
                 )
             '';
 
-        wrappedPi = { lib, pkgs }:
-            let
-                package = pkgs.pi-coding-agent;
-            in pkgs.symlinkJoin {
-                inherit (package) meta;
-                name = "${lib.getName package}-wrapped-${lib.getVersion package}";
-                paths = [ package ];
-                preferLocalBuild = true;
-                nativeBuildInputs = [ pkgs.makeWrapper ];
-                postBuild = ''
-                    wrapProgram $out/bin/pi \
-                        --set-default GIT_OPTIONAL_LOCKS 0 \
-                        --suffix PATH : ${lib.makeBinPath (extraPackages pkgs)}
-                '';
-            };
+        wrappedPi = { lib, pkgs }: pkgs.symlinkJoin {
+            inherit (pkgs.pi-coding-agent) meta;
+            name = "${lib.getName pkgs.pi-coding-agent}-wrapped-${lib.getVersion pkgs.pi-coding-agent}";
+            paths = [ pkgs.pi-coding-agent ];
+            preferLocalBuild = true;
+            nativeBuildInputs = [ pkgs.makeWrapper ];
+            postBuild = ''
+                wrapProgram $out/bin/pi \
+                    --set-default GIT_OPTIONAL_LOCKS 0 \
+                    --suffix PATH : ${lib.makeBinPath (extraPackages pkgs)}
+            '';
+        };
     in {
         homeManagerModules.default = { config, lib, pkgs, ... }: {
             home.packages = [ (wrappedPi { inherit lib pkgs; }) ];
