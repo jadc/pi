@@ -154,11 +154,7 @@
     "colorLevel": "ansi256"
   },
   "extensionStatusRow": {
-    "hiddenKeys": [
-      "pi-lens-lsp"
-    ],
-    "knownKeys": [
-      "pi-lens-lsp"
-    ]
+    "hiddenKeys": [],
+    "knownKeys": []
   }
 }
