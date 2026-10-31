@@ -4,7 +4,7 @@ import { getAgentDir, getPackageDir, type ExtensionAPI } from "@earendil-works/p
 import { colorToHex, parseColor } from "@earendil-works/pi-tui";
 
 /**
- * Writes a randomly hue-shifted copy of a base theme to <agent-dir>/random-hue/random.json.
+ * Writes a hue-shifted copy of a base theme to <agent-dir>/random-hue/random.json.
  * The base theme is set in <agent-dir>/random-hue/config.json as `{ "theme": "<name>" }`,
  * and may be any user theme in <agent-dir>/themes/ or a built-in (dark, light). Without that file,
  * random.json is removed and Pi falls back to its default "system" theme.
@@ -12,7 +12,9 @@ import { colorToHex, parseColor } from "@earendil-works/pi-tui";
  * Requires these settings: `"theme": "random"` and `"themes": ["random-hue/random.json"]` (the file, not the directory, so config.json isn't loaded as a theme).
  *
  * Pi loads extensions before it reads theme files, so the file written here is what Pi applies
- * from the very first frame (no flash of the base theme). /reload and session switches pick a new hue.
+ * from the very first frame (no flash of the base theme). /reload and session switches advance the hue
+ * by `step` percent of the wheel (config.json, default 10) from the last session's, wrapping at 360°.
+ * The last offset is stored in <agent-dir>/random-hue/state.json.
  *
  * The file deliberately lives outside <agent-dir>/themes/: Pi hot-reloads the active theme only
  * from there, so keeping it out means a newly launched Pi doesn't recolor the ones already open.
@@ -21,6 +23,10 @@ import { colorToHex, parseColor } from "@earendil-works/pi-tui";
 const OUTPUT_THEME = "random";
 const CONFIG_FILE = "random-hue/config.json";
 const OUTPUT_DIR = "random-hue";
+// Remembers the last hue offset so each session shifts it further instead of picking at random.
+const STATE_FILE = "random-hue/state.json";
+// Default step per session, as a percentage of the full hue wheel (overridable via config `"step"`).
+const DEFAULT_STEP_PERCENT = 10;
 // Colors whose meaning depends on their hue (diff red/green, errors) are left untouched.
 const FIXED_TOKENS = new Set(["error", "toolDiffAdded", "toolDiffRemoved"]);
 
@@ -39,7 +45,6 @@ function resolve(value: string | number, vars: Record<string, string | number>, 
   return value;
 }
 
-/** Rotates a hex color's hue in OKLCH, preserving perceptual lightness. */
 /**
  * Shifts any color format Pi accepts (hex, okhsl(), oklch(), ...). Leaves terminal-default ("")
  * and 256-color palette indexes alone: their actual color is up to the terminal.
@@ -129,23 +134,54 @@ function buildShiftedTheme(base: ThemeJson, degrees: number): ThemeJson {
   return { ...rest, name: OUTPUT_THEME, colors, ...(exportColors ? { export: exportColors } : {}) };
 }
 
-/** Returns the configured base theme name, or undefined when the config file does not exist. */
-function readBaseThemeName(agentDir: string): string | undefined {
+/**
+ * Returns the base theme name and hue step (percent of the 360° wheel) from config.json,
+ * or undefined when the file does not exist.
+ */
+function readConfig(agentDir: string): { theme: string; step: number } | undefined {
   const configPath = join(agentDir, CONFIG_FILE);
   if (!existsSync(configPath)) return undefined;
-  let config: { theme?: unknown };
+  let config: { theme?: unknown; step?: unknown };
   try {
-    config = JSON.parse(readFileSync(configPath, "utf-8")) as { theme?: unknown };
+    config = JSON.parse(readFileSync(configPath, "utf-8")) as typeof config;
   } catch (error) {
     throw new Error(`${configPath}: invalid JSON (${error instanceof Error ? error.message : error})`);
   }
   if (typeof config.theme !== "string" || !config.theme.trim()) {
     throw new Error(`${configPath}: "theme" must be a non-empty string`);
   }
-  const name = config.theme.trim();
-  if (name === OUTPUT_THEME) throw new Error(`${configPath}: "theme" cannot be "${OUTPUT_THEME}" itself`);
-  if (name === "system") throw new Error(`${configPath}: the "system" theme is generated at runtime and has no JSON to shift`);
-  return name;
+  const theme = config.theme.trim();
+  if (theme === OUTPUT_THEME) throw new Error(`${configPath}: "theme" cannot be "${OUTPUT_THEME}" itself`);
+  if (theme === "system") throw new Error(`${configPath}: the "system" theme is generated at runtime and has no JSON to shift`);
+  const step = typeof config.step === "number" && Number.isFinite(config.step) ? config.step : DEFAULT_STEP_PERCENT;
+  return { theme, step };
+}
+
+/**
+ * Writes via a per-process temp file renamed over the target: the rename is atomic, so a Pi
+ * process starting at the same moment never reads a half-written file.
+ */
+function writeAtomic(path: string, data: unknown, indent?: number): void {
+  const tmp = `${path}.${process.pid}.tmp`;
+  try {
+    writeFileSync(tmp, `${JSON.stringify(data, null, indent)}\n`);
+    renameSync(tmp, path);
+  } finally {
+    rmSync(tmp, { force: true });
+  }
+}
+
+/** Advances the previous session's hue by `stepPercent` of the wheel, wrapping at 360°, and persists it. */
+function nextHue(agentDir: string, stepPercent: number): number {
+  const statePath = join(agentDir, STATE_FILE);
+  let last = 0;
+  try {
+    const state = JSON.parse(readFileSync(statePath, "utf-8")) as { degrees?: unknown };
+    if (typeof state.degrees === "number" && Number.isFinite(state.degrees)) last = state.degrees;
+  } catch {}
+  const degrees = (((last + (stepPercent / 100) * 360) % 360) + 360) % 360;
+  writeAtomic(statePath, { degrees });
+  return degrees;
 }
 
 /** User themes first, then Pi's built-in themes (same lookup Pi uses for a theme name). */
@@ -166,30 +202,18 @@ export default function (_pi: ExtensionAPI) {
     const outDir = join(agentDir, OUTPUT_DIR);
     const outPath = join(outDir, `${OUTPUT_THEME}.json`);
 
-    // Older versions wrote to themes/, where Pi would hot-reload it across processes.
-    rmSync(join(agentDir, "themes", `${OUTPUT_THEME}.json`), { force: true });
-
-    const baseName = readBaseThemeName(agentDir);
-    if (baseName === undefined) {
+    const config = readConfig(agentDir);
+    if (config === undefined) {
       // No config: remove the generated theme so Pi falls back to its default "system" theme
       // (Pi's setTheme() does this when the selected theme is missing). settings.json is untouched.
       rmSync(outPath, { force: true });
       return;
     }
-    const basePath = findThemeFile(agentDir, baseName);
+    const basePath = findThemeFile(agentDir, config.theme);
 
     const base = JSON.parse(readFileSync(basePath, "utf-8").replace(/^\uFEFF/, "")) as ThemeJson;
-    const degrees = Math.floor(Math.random() * 360);
     mkdirSync(outDir, { recursive: true });
-    // Write to a per-process temp file, then rename over random.json: the rename is atomic, so a Pi
-    // process starting at the same moment never reads a half-written theme.
-    const tmpPath = `${outPath}.${process.pid}.tmp`;
-    try {
-      writeFileSync(tmpPath, `${JSON.stringify(buildShiftedTheme(base, degrees), null, 2)}\n`);
-      renameSync(tmpPath, outPath);
-    } finally {
-      rmSync(tmpPath, { force: true });
-    }
+    writeAtomic(outPath, buildShiftedTheme(base, nextHue(agentDir, config.step)), 2);
   } catch (error) {
     console.error("random-hue: failed to generate theme (keeping the previous one, if any):", error);
   }
