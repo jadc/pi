@@ -5,14 +5,5 @@ description: "Review the changes since a fixed point (commit, branch, tag, or me
 
 Read and follow the upstream skill at `../../git/github.com/mattpocock/skills/skills/engineering/code-review/SKILL.md` (relative to this skill's directory), with these local changes:
 
-## Step 4: each axis runs on two agents
-
-Send each axis's prompt, exactly as upstream builds it, to both the `reviewer` and the `reviewer-alt` agent definitions. Issue all four sub-agent calls together, in parallel. If the Spec axis is skipped, both of its sub-agents are skipped.
-
-If `reviewer-alt` is unavailable (the definition is missing, or the delegation fails), say so in the final report and carry on with `reviewer` alone.
-
-## Step 5: aggregate
-
-Under each axis heading, present both reports separately under `### reviewer` and `### reviewer-alt`. Don't merge or rerank them; you may note where they agree or contradict.
-
-In the closing summary, give finding counts and the worst issue per axis, per agent.
+- **Step 4:** send each axis's prompt, exactly as upstream builds it, to both the `reviewer` and `reviewer-alt` agent definitions, all in parallel (a skipped Spec axis skips both). If `reviewer-alt` is unavailable (missing definition or failed delegation), say so in the final report and carry on with `reviewer` alone.
+- **Step 5:** under each axis heading, present the two reports separately as `### reviewer` and `### reviewer-alt`, without merging or reranking (noting agreements or contradictions is fine). The closing summary gives finding counts and the worst issue per axis, per agent.
