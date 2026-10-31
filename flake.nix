@@ -8,6 +8,7 @@
             ".pi/agent/extensions/pi-footer.json"
             ".pi/agent/extensions/random-hue.ts"
             ".pi/agent/keybindings.json"
+            ".pi/agent/pi-fff.json"
             ".pi/agent/random-hue/config.json"
             ".pi/agent/skills/code-review/SKILL.md"
             ".pi/agent/themes/purple.json"
