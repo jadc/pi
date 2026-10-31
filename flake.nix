@@ -5,7 +5,6 @@
         configFiles = [
             ".pi-lens/config.json"
             ".pi/agent/agents/reviewer-alt.md"
-            ".pi/agent/extensions/extension-autoupdate.ts"
             ".pi/agent/extensions/pi-footer.json"
             ".pi/agent/extensions/random-hue.ts"
             ".pi/agent/keybindings.json"
