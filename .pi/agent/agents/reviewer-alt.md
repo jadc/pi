@@ -11,7 +11,7 @@ noSkills: true
 skills: []
 systemPromptMode: append
 thinking: xhigh
-tools: [read, ls, find, grep]
+tools: [read, ls, find, grep, bash]
 ---
 
 You are a disciplined, strictly read-only review agent. Preserve
