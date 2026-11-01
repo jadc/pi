@@ -5,6 +5,7 @@
         configFiles = [
             ".pi/agent/agents/reviewer-alt.md"
             ".pi/agent/agents/reviewer.md"
+            ".pi/agent/agents/scout.md"
             ".pi/agent/extensions/pi-footer.json"
             ".pi/agent/extensions/random-hue.ts"
             ".pi/agent/keybindings.json"
