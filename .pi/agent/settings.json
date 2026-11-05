@@ -18,6 +18,7 @@
     "npm:@sting8k/pi-vcc",
     "npm:pi-footer",
     "npm:pi-herdsman",
+    "npm:pi-vim",
     "npm:pi-web-access",
 
     {
