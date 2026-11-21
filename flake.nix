@@ -11,7 +11,7 @@
             ".pi/agent/random-hue/config.json"
             ".pi/agent/skills/code-review/SKILL.md"
             ".pi/agent/themes/purple.json"
-            ".pi/web-search.json"
+            ".pi/agent/web-search.json"
         ];
 
         # Settings file is merged into the user's existing one.
