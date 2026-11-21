@@ -3,6 +3,7 @@
     let
         # Config files linked individually such that pi is still able to write in others.
         configFiles = [
+            ".pi/agent/agents/reviewer-alt.md"
             ".pi/agent/extensions/pi-footer.json"
             ".pi/agent/extensions/random-hue.ts"
             ".pi/agent/keybindings.json"
