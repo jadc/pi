@@ -16,6 +16,7 @@
     "npm:@ff-labs/pi-fff",
     "npm:@gotgenes/pi-anthropic-auth",
     "npm:@sting8k/pi-vcc",
+    "npm:pi-agents-autoload",
     "npm:pi-footer",
     "npm:pi-herdsman",
     "npm:pi-web-access",
